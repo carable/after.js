@@ -1,9 +1,15 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { loadInitialProps } from './loadInitialProps';
 
 class Afterparty extends React.Component<any, any> {
   prefetcherCache: any;
+
+  static contextTypes = {
+    scrollBehavior: PropTypes.object
+  }
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -17,7 +23,10 @@ class Afterparty extends React.Component<any, any> {
   componentWillReceiveProps(nextProps: any, nextState: any) {
     const navigated = nextProps.location !== this.props.location;
     if (navigated) {
-      window.scrollTo(0, 0);
+      const hasScrollContext = typeof this.context.scrollBehavior !== 'undefined'
+      if (!hasScrollContext) {
+        window.scrollTo(0, 0);
+      }
       // save the location so we can render the old screen
       this.setState({
         previousLocation: this.props.location,
